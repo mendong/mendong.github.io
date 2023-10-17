@@ -9,7 +9,7 @@
  */
 module.exports = {
   siteMetadata: {
-    title: `mendong의 웹페이지`,
+    title: `Blog`,
     author: {
       name: `mendong`,
       summary: ``,
