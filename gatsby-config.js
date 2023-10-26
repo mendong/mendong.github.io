@@ -14,7 +14,7 @@ module.exports = {
       name: `mendong`,
       summary: ``,
     },
-    description: `blog`,
+    description: `닫힌 계에서 엔트로피의 총량은 감소하지 않는다`,
   },
   plugins: [
     `gatsby-plugin-image`,
