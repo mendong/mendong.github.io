@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mendong</title>
+    <meta name="description" content="Backend Engineer | AI/LLM | Fintech & EdTech">
+    <link rel="icon" href="favicon.ico">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+        :root {
+            --bg: #0d1117;
+            --terminal-bg: #161b22;
+            --text: #c9d1d9;
+            --text-muted: #8b949e;
+            --green: #3fb950;
+            --blue: #58a6ff;
+            --purple: #bc8cff;
+            --yellow: #d29922;
+            --border: #30363d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .terminal {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            gap: 8px;
+        }
+
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .btn-red { background: #ff5f56; }
+        .btn-yellow { background: #ffbd2e; }
+        .btn-green { background: #27c93f; }
+
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .terminal-body {
+            padding: 1.5rem;
+        }
+
+        .prompt {
+            color: var(--green);
+        }
+
+        .command {
+            color: var(--blue);
+        }
+
+        .comment {
+            color: var(--text-muted);
+        }
+
+        .output {
+            margin: 1rem 0 1.5rem 0;
+            padding-left: 0;
+        }
+
+        .ascii-name {
+            color: var(--purple);
+            font-size: 0.65rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            white-space: pre;
+        }
+
+        .info-line {
+            margin: 0.25rem 0;
+            font-size: 0.85rem;
+        }
+
+        .label {
+            color: var(--yellow);
+        }
+
+        .links-section {
+            margin-top: 1.5rem;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            background: rgba(88, 166, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+
+        .link-item:hover {
+            background: rgba(88, 166, 255, 0.1);
+            border-color: var(--blue);
+            transform: translateX(4px);
+        }
+
+        .link-icon {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+
+        .link-text {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .link-arrow {
+            color: var(--text-muted);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .link-item:hover .link-arrow {
+            opacity: 1;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--green);
+            margin-left: 4px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-btn btn-red"></div>
+            <div class="terminal-btn btn-yellow"></div>
+            <div class="terminal-btn btn-green"></div>
+            <span class="terminal-title">mendong@dev ~ zsh</span>
+        </div>
+        <div class="terminal-body">
+            <div>
+                <span class="prompt">$</span> <span class="command">whoami</span>
+            </div>
+            <div class="output">
+<pre class="ascii-name">
+ _ __ ___   ___ _ __   __| | ___  _ __   __ _
+| '_ ` _ \ / _ \ '_ \ / _` |/ _ \| '_ \ / _` |
+| | | | | |  __/ | | | (_| | (_) | | | | (_| |
+|_| |_| |_|\___|_| |_|\__,_|\___/|_| |_|\__, |
+                                        |___/
+</pre>
+                <div class="info-line"><span class="label">name:</span> Donghwan Kim</div>
+                <div class="info-line"><span class="label">role:</span> Backend Engineer</div>
+                <div class="info-line"><span class="label">stack:</span> AI/LLM, Fintech, EdTech</div>
+            </div>
+
+            <div>
+                <span class="prompt">$</span> <span class="command">cat links.json</span>
+            </div>
+            <div class="links-section">
+                <a href="https://mendong.substack.com" class="link-item" target="_blank" rel="noopener">
+                    <span class="link-icon">&#128221;</span>
+                    <span class="link-text">substack <span class="comment">// writing & essays</span></span>
+                    <span class="link-arrow">-></span>
+                </a>
+                <a href="https://www.linkedin.com/in/mendong/" class="link-item" target="_blank" rel="noopener">
+                    <span class="link-icon">&#128188;</span>
+                    <span class="link-text">linkedin <span class="comment">// career & network</span></span>
+                    <span class="link-arrow">-></span>
+                </a>
+                <a href="https://www.instagram.com/mendong.kim/" class="link-item" target="_blank" rel="noopener">
+                    <span class="link-icon">&#128247;</span>
+                    <span class="link-text">instagram <span class="comment">// life & moments</span></span>
+                    <span class="link-arrow">-></span>
+                </a>
+                <a href="https://github.com/mendong" class="link-item" target="_blank" rel="noopener">
+                    <span class="link-icon">&#128187;</span>
+                    <span class="link-text">github <span class="comment">// code & projects</span></span>
+                    <span class="link-arrow">-></span>
+                </a>
+            </div>
+
+            <div class="footer">
+                <span class="prompt">$</span> <span class="cursor"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
