@@ -174,6 +174,48 @@
             font-size: 0.75rem;
             color: var(--text-muted);
         }
+
+        /* Mobile optimization */
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+
+            .terminal-body {
+                padding: 1rem;
+            }
+
+            .ascii-name {
+                font-size: 0.45rem;
+            }
+
+            .info-line {
+                font-size: 0.8rem;
+            }
+
+            .link-text {
+                font-size: 0.85rem;
+            }
+
+            .link-text .comment {
+                display: none;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 360px) {
+            .ascii-name {
+                font-size: 0.38rem;
+            }
+
+            .terminal-header {
+                padding: 10px 12px;
+            }
+
+            .terminal-title {
+                font-size: 0.65rem;
+            }
+        }
     </style>
 </head>
 <body>
