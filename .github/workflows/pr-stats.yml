@@ -1,0 +1,57 @@
+name: Update PR Stats
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 매일 UTC 00:00
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch PR stats via GraphQL
+        env:
+          GH_TOKEN: ${{ secrets.PR_STATS_TOKEN }}
+        run: |
+          WEEKS=12
+          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          QUERY='query {'
+
+          for i in $(seq 0 $((WEEKS - 1))); do
+            WEEK_END=$(date -u -d "$NOW - $((i * 7)) days" +%Y-%m-%d 2>/dev/null || date -u -v-$((i * 7))d +%Y-%m-%d)
+            WEEK_START=$(date -u -d "$NOW - $(((i + 1) * 7 - 1)) days" +%Y-%m-%d 2>/dev/null || date -u -v-$(((i + 1) * 7 - 1))d +%Y-%m-%d)
+            QUERY="$QUERY w$i: search(query: \"author:mendong type:pr created:${WEEK_START}..${WEEK_END}\", type: ISSUE) { issueCount }"
+          done
+
+          QUERY="$QUERY }"
+
+          RESPONSE=$(curl -s -H "Authorization: bearer $GH_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"query\": \"$QUERY\"}" \
+            https://api.github.com/graphql)
+
+          # Build JSON array (newest week = index 0 in response, reverse to chronological order)
+          echo "$RESPONSE" | python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)['data']
+          weeks = $WEEKS
+          counts = [data[f'w{i}']['issueCount'] for i in range(weeks)]
+          counts.reverse()
+          result = {'updated': '$(date -u +%Y-%m-%dT%H:%M:%SZ)', 'weeks': counts}
+          print(json.dumps(result))
+          " > pr-stats.json
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pr-stats.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "chore: Update PR stats [skip ci]"
+          git push

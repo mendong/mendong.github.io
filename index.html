@@ -175,6 +175,41 @@
             color: var(--text-muted);
         }
 
+        .pr-stats {
+            margin: 1rem 0 1.5rem 0;
+            font-size: 0.85rem;
+        }
+
+        .pr-stats .loading {
+            color: var(--text-muted);
+        }
+
+        .pr-row {
+            display: flex;
+            align-items: center;
+            line-height: 1.6;
+        }
+
+        .pr-label {
+            color: var(--text-muted);
+            width: 3.5ch;
+            text-align: right;
+            margin-right: 1ch;
+            flex-shrink: 0;
+        }
+
+        .pr-bar {
+            color: var(--green);
+            white-space: pre;
+            flex-shrink: 0;
+        }
+
+        .pr-count {
+            color: var(--text);
+            margin-left: 1ch;
+            flex-shrink: 0;
+        }
+
         /* Mobile optimization */
         @media (max-width: 480px) {
             body {
@@ -243,6 +278,13 @@
             </div>
 
             <div>
+                <span class="prompt">$</span> <span class="command">gh pr stats --weeks 12</span>
+            </div>
+            <div class="pr-stats" id="pr-stats">
+                <span class="loading">loading...</span>
+            </div>
+
+            <div>
                 <span class="prompt">$</span> <span class="command">cat links.json</span>
             </div>
             <div class="links-section">
@@ -278,5 +320,41 @@
             </div>
         </div>
     </div>
+    <script>
+    (function() {
+        var MAX_BAR = 8;
+        var container = document.getElementById('pr-stats');
+
+        fetch('pr-stats.json')
+            .then(function(res) {
+                if (!res.ok) throw new Error(res.status);
+                return res.json();
+            })
+            .then(function(data) {
+                var weekCounts = data.weeks;
+                var max = Math.max.apply(null, weekCounts);
+                if (max === 0) max = 1;
+
+                var html = '';
+                for (var i = 0; i < weekCounts.length; i++) {
+                    var count = weekCounts[i];
+                    var filled = Math.round((count / max) * MAX_BAR);
+                    var empty = MAX_BAR - filled;
+                    var bar = '\u2588'.repeat(filled) + '\u2591'.repeat(empty);
+                    var label = 'w' + (i + 1);
+                    html += '<div class="pr-row">' +
+                        '<span class="pr-label">' + label + '</span>' +
+                        '<span class="pr-bar">' + bar + '</span>' +
+                        '<span class="pr-count">' + count + '</span>' +
+                        '</div>';
+                }
+                container.innerHTML = html;
+            })
+            .catch(function() {
+                container.style.display = 'none';
+                container.previousElementSibling.style.display = 'none';
+            });
+    })();
+    </script>
 </body>
 </html>
