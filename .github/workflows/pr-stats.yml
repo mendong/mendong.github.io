@@ -20,32 +20,37 @@ jobs:
           GH_TOKEN: ${{ secrets.PR_STATS_TOKEN }}
         run: |
           WEEKS=12
-          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          QUERY='query {'
+          python3 << 'PYEOF'
+          import subprocess, json, datetime
 
-          for i in $(seq 0 $((WEEKS - 1))); do
-            WEEK_END=$(date -u -d "$NOW - $((i * 7)) days" +%Y-%m-%d 2>/dev/null || date -u -v-$((i * 7))d +%Y-%m-%d)
-            WEEK_START=$(date -u -d "$NOW - $(((i + 1) * 7 - 1)) days" +%Y-%m-%d 2>/dev/null || date -u -v-$(((i + 1) * 7 - 1))d +%Y-%m-%d)
-            QUERY="$QUERY w$i: search(query: \"author:mendong type:pr created:${WEEK_START}..${WEEK_END}\", type: ISSUE) { issueCount }"
-          done
+          weeks = 12
+          now = datetime.date.today()
 
-          QUERY="$QUERY }"
+          fields = []
+          for i in range(weeks):
+              end = now - datetime.timedelta(days=i * 7)
+              start = now - datetime.timedelta(days=(i + 1) * 7 - 1)
+              q = f'author:mendong type:pr created:{start}..{end}'
+              fields.append(f'w{i}: search(query: "{q}", type: ISSUE) {{ issueCount }}')
 
-          RESPONSE=$(curl -s -H "Authorization: bearer $GH_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{\"query\": \"$QUERY\"}" \
-            https://api.github.com/graphql)
+          query = 'query { ' + ' '.join(fields) + ' }'
 
-          # Build JSON array (newest week = index 0 in response, reverse to chronological order)
-          echo "$RESPONSE" | python3 -c "
-          import json, sys
-          data = json.load(sys.stdin)['data']
-          weeks = $WEEKS
+          result = subprocess.run(
+              ['gh', 'api', 'graphql', '-f', f'query={query}'],
+              capture_output=True, text=True
+          )
+          data = json.loads(result.stdout)['data']
+
           counts = [data[f'w{i}']['issueCount'] for i in range(weeks)]
           counts.reverse()
-          result = {'updated': '$(date -u +%Y-%m-%dT%H:%M:%SZ)', 'weeks': counts}
-          print(json.dumps(result))
-          " > pr-stats.json
+
+          output = {
+              'updated': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+              'weeks': counts
+          }
+          with open('pr-stats.json', 'w') as f:
+              json.dump(output, f)
+          PYEOF
 
       - name: Commit and push
         run: |
