@@ -19,18 +19,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PR_STATS_TOKEN }}
         run: |
-          WEEKS=12
+          WEEKS=8
           python3 << 'PYEOF'
           import subprocess, json, datetime
 
-          weeks = 12
+          weeks = 8
           now = datetime.date.today()
 
           fields = []
           for i in range(weeks):
               end = now - datetime.timedelta(days=i * 7)
               start = now - datetime.timedelta(days=(i + 1) * 7 - 1)
-              q = f'author:mendong type:pr created:{start}..{end}'
+              q = f'author:mendong type:pr is:merged merged:{start}..{end}'
               fields.append(f'w{i}: search(query: "{q}", type: ISSUE) {{ issueCount }}')
 
           query = 'query { ' + ' '.join(fields) + ' }'

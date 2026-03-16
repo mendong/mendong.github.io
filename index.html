@@ -187,7 +187,7 @@
         .pr-row {
             display: flex;
             align-items: center;
-            line-height: 1.6;
+            line-height: 1.3;
         }
 
         .pr-label {
@@ -278,13 +278,6 @@
             </div>
 
             <div>
-                <span class="prompt">$</span> <span class="command">gh pr stats --weeks 12</span>
-            </div>
-            <div class="pr-stats" id="pr-stats">
-                <span class="loading">loading...</span>
-            </div>
-
-            <div>
                 <span class="prompt">$</span> <span class="command">cat links.json</span>
             </div>
             <div class="links-section">
@@ -313,6 +306,13 @@
                     <span class="link-text">pacemaker <span class="comment">// running & fitness</span></span>
                     <span class="link-arrow">-></span>
                 </a>
+            </div>
+
+            <div>
+                <span class="prompt">$</span> <span class="command">gh pr merged --weekly</span>
+            </div>
+            <div class="pr-stats" id="pr-stats">
+                <span class="loading">loading...</span>
             </div>
 
             <div class="footer">
