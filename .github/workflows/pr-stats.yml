@@ -41,12 +41,18 @@ jobs:
           )
           data = json.loads(result.stdout)['data']
 
-          counts = [data[f'w{i}']['issueCount'] for i in range(weeks)]
-          counts.reverse()
+          entries = []
+          for i in range(weeks):
+              start = now - datetime.timedelta(days=(i + 1) * 7 - 1)
+              entries.append({
+                  'label': f'{start.month}/{start.day:02d}',
+                  'count': data[f'w{i}']['issueCount']
+              })
+          entries.reverse()
 
           output = {
               'updated': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
-              'weeks': counts
+              'weeks': entries
           }
           with open('pr-stats.json', 'w') as f:
               json.dump(output, f)
